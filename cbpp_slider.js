@@ -10,17 +10,18 @@
     var urlBase;
 
     CBPP.Slider.load = function(callback) {
-        CBPP.Slider.urlBase = CBPP.urlBase + "CBPP_Slider/v" + CBPP.Slider.version + "/";
+        var CBPP_URL_ROOT = CBPP.Slider.urlBase = CBPP.urlBase + "CBPP_Slider/v" + CBPP.Slider.version + "/";
         urlBase = CBPP.Slider.urlBase;
         var jQueryUILoaded = false, jqueryCSSLoaded = false, sliderCSSLoaded = false,
             thisSliderLoaded = false;
-        $.getScript(urlBase + "jquery-ui-1.11.4.custom/jquery-ui.min.js", function() {
-            $.getScript(urlBase + "jquery.ui.touch-punch.min.js", function() {
-                ready();
-                jQueryUILoaded = true;
-            });
-        });
-        
+        var touchPunchLoad = function() {
+            ready();
+            jQueryUILoaded = true;
+        };
+        CBPP.JS(CBPP_URL_ROOT + "jquery-ui-1.11.4.custom/jquery-ui.min.js", jQueryUILoadFunction);
+        function jQueryUILoadFunction() {
+            CBPP.JS(CBPP_URL_ROOT + "jquery.ui.touch-punch.min.js", touchPunchLoad);
+        }
         function loadJQueryCSS() {
             jqueryCSSLoaded = true;
             ready();
@@ -30,26 +31,9 @@
             ready();
         }
         
-        var l = document.createElement("link");
-        l.href = urlBase + "jquery-ui-1.11.4.custom/jquery-ui.min.css";
-        l.type = "text/css";
-        l.rel = "stylesheet";
-        try {
-            l.onload = loadJQueryCSS;
-        } catch (ex) {}
-        
-  
-        var l2 = document.createElement("link");
-        l2.href = urlBase + "cbpp_slider.css";
-        l2.type = "text/css";
-        l2.rel = "stylesheet";
-        try {
-            l2.onload = loadSliderCSS();
-        } catch (ex) {}
-        
-        document.getElementsByTagName('head')[0].appendChild(l);
-        document.getElementsByTagName('head')[0].appendChild(l2);
-        
+        CBPP.CSS(CBPP_URL_ROOT + "jquery-ui-1.11.4.custom/jquery-ui.min.css", loadJQueryCSS);
+        CBPP.CSS(CBPP_URL_ROOT + "cbpp_slider.css", loadSliderCSS);
+
         function ready() {
             if (jqueryCSSLoaded && sliderCSSLoaded && jQueryUILoaded && !thisSliderLoaded) {
                 CBPP.Slider.ready = true;
