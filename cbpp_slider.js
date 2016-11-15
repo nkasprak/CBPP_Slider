@@ -74,6 +74,7 @@
             return false;
         }
         
+        
         var s = this;
 
         s.options = {
@@ -168,7 +169,8 @@
             return toAppend;   
         };
         s.destroy = function() {
-            $(s.selector).slider("destroy");
+            //console.log($(s.selector));
+           // $(s.selector).slider("destroy");
             $(s.selector).empty();
             $(s.selector).unbind();
             delete(s.selector);
@@ -212,5 +214,6 @@
         });
         $(s.selector).find(".ui-slider-handle").append("<div class='cbpp-slider-handle'></div>");
         s.sliderStopFunction(false);
+        s.setValue(s.options.min);
     };
 })();
