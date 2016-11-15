@@ -1,0 +1,70 @@
+.cbpp_slider .main-line {
+    height:1px;
+    background-color:#000;
+    width:100% !important;
+    position:absolute;
+    top:50%;
+}
+
+.cbpp_slider .ui-slider-range {
+    height:1px;
+    background-color:#000;
+    top:50%;
+}
+
+.cbpp_slider .ui-slider-handle{
+    display:block;
+    top:50%;
+}
+
+.cbpp_slider .ui-slider-handle:focus {
+    outline:none;  
+}
+
+.cbpp_slider .ui-slider-handle .cbpp-slider-handle {
+    position:relative;
+    top:-6px;
+    left:5px;
+    height:12px;
+    width:12px !important;
+    background-color:#000;
+}
+
+.cbpp_slider .tick {
+    position:absolute;
+    top:0px;
+    height:100%;
+    background-color:#000;
+    width:1px !important;
+    overflow:visible;
+}
+
+.cbpp_slider .tick .label {
+    position:absolute;
+    top:1em;
+    display:block;
+    text-align:center;
+    width:5em !important;
+    left:-2.5em;
+}
+
+.cbpp_slider .tick .label.first,
+.cbpp_slider .tick .label.last {
+    text-align:left;
+    width:auto !important;
+    left:auto;
+}
+
+.cbpp_slider .tick .label.last {
+    right:0px;
+}
+
+/*overrides main CBPP stylesheet*/
+.cbpp_slider .ui-state-default, .cbpp_slider .ui-widget-content .ui-state-default, .cbpp_slider .ui-widget-header .ui-state-default {
+    border:0px;
+    background:none;
+}
+
+.cbpp_slider.ui-widget-content {
+    border:0px;
+}
