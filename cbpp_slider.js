@@ -66,7 +66,10 @@
         s.options = {
             min:0,
             max:100,
-            labeledValues: []
+            labeledValues: [],
+            labelFormatter: function(n) {
+                return n;
+            }
         };
         
         s.selector = selector;
@@ -74,15 +77,61 @@
 
         s.change = function(handler) {
             $(s.selector).slider({
-                slide: handler
+                slide: function(e, v) {
+                    var doChange = true;
+                    if (typeof(s.options.allowedValues)!=="undefined") {
+                        doChange = false;
+                        e.preventDefault();
+                        var startValue = $(selector).slider("values");
+                        if (startValue.length === 0) {
+                            startValue = $(selector).slider("value");
+                        }
+                        var value;
+                        if (typeof(v.value)!=="undefined") {
+                            value = [v.value];
+                        }
+                        if (typeof(v.values)!=="undefined") {
+                            value = v.values;
+                        }
+                        for (var j = 0, jj = value.length; j<jj; j++) {
+                            for (var i = 0, ii = s.options.allowedValues.length - 1; i<ii; i++) {
+                                if (value[j] <= s.options.allowedValues[i]) {
+                                    if (value[j] - s.options.allowedValues[i] < s.options.allowedValues[i+1] - value[j]) {
+                                        value[j] = s.options.allowedValues[i];
+                                    } else {
+                                        value[j] = s.options.allowedValues[i+1];
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (value.length === 1) {
+                            v.value = value[0];
+                            $(s.selector).slider("value", v.value);
+                            doChange = v.value !== startValue;
+                            delete(v.values);
+                        } else {
+                            v.values = value;
+                            $(s.selector).slider("values", v.values);
+                            doChange = (v.values[0] !== startValue[0] || v.values[1] !== startValue[1]);
+                            delete(v.value);
+                        }
+                    }
+                    if (doChange) {
+                        handler.call(this, e, v);
+                    }
+                }
             });
-        }
+            /*$(s.selector).slider({
+                slide: handler
+            });*/
+        };
 
         s.makeTicks = function() {
             var toAppend = [], tick, perc;
             for (var i = 0,ii = s.options.labeledValues.length;i<ii;i++) {
                 perc = Math.round((s.options.labeledValues[i] - s.options.min)/(s.options.max - s.options.min)*1000)/10;
-                tick = $("<div class='tick' style='left:" + perc + "%' ><span class='label" + (i===ii-1 ? ' last' : '') + (i===0 ? ' first' : '') + "'>" + s.options.labeledValues[i] + "</span></div>");
+                tick = $("<div class='tick' style='left:" + perc + "%' ><span class='label" + (i===ii-1 ? ' last' : '') + (i===0 ? ' first' : '') + "'>" + s.options.labelFormatter(s.options.labeledValues[i]) + "</span></div>");
                 toAppend.push(tick);
             } 
             return toAppend;   
